@@ -8,7 +8,15 @@ define(["jquery",
         
         var tensorboard_list = new tensorboardlist.TensorboardList("#tensorboard_list", {});
         
-        var _selection_changed = Jupyter.notebook_list.__proto__._selection_changed;
+        var _selection_changed;
+
+        if (Jupyter.notebook_list !== undefined &&
+            Jupyter.notebook_list.__proto__._selection_changed !== undefined)
+            _selection_changed = Jupyter.notebook_list.__proto__._selection_changed;
+        else {
+            return;
+        }
+
         Jupyter.notebook_list.__proto__._selection_changed = function(){
             _selection_changed.apply(this);
             selected = this.selected;
@@ -19,7 +27,7 @@ define(["jquery",
             }
         };
         Jupyter.notebook_list._selection_changed();
-        
+
         $('#running .panel-group .panel .panel-heading a').each(function(index, el) {
             $('.fa.fa-caret-down').remove();
         });

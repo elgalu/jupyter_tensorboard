@@ -6,9 +6,15 @@ define([
     'tree/js/notebooklist',
 ], function($, Jupyter, dialog, utils, notebooklist) {
     "use strict";
-    
+
     var TensorboardList = function (selector, options) {
-        this.base_url = Jupyter.notebook_list.base_url;
+        if (Jupyter.notebook_list !== undefined && Jupyter.notebook_list.base_url !== undefined)
+            this.base_url = Jupyter.notebook_list.base_url;
+        else if (Jupyter.notebook !== undefined && Jupyter.notebook.base_url !== undefined) {
+            this.base_url = Jupyter.notebook.base_url;
+        } else {
+            return;
+        }
         this.init_elements();
         this.element_name = options.element_name || 'running';
         this.selector = selector;
